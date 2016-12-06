@@ -2,19 +2,38 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String [] args){
-        List<Float> inputFile = new ArrayList<>();
 
+    public static void main(String[] args){
+
+        //path to input file
+        String pathToInputFile;
+        //path to output file
+        String pathToOutputFile;
+        //object of Scanner
+        Scanner scanner = new Scanner(System.in);
+
+
+        System.out.println("Enter path to input file");
+        pathToInputFile = scanner.next();
+        System.out.println("Enter path to output file");
+        pathToOutputFile = scanner.next();
+
+        //Take records from file
+        List<Float> inputFile = takeRecordsFromFile(pathToInputFile);
+
+        //Sort records
         Collections.sort(inputFile, Collections.reverseOrder());
+
+        //Write records in file
+        write(pathToOutputFile, inputFile);
     }
 
+    private static List<Float> takeRecordsFromFile(String pathToFile){
 
-
-    private List<Float> takeRecordsFromFile(String fileName,  String pathToFolder){
-        //Create new file (address = pathToFolder + fileName
-        File file = new File(pathToFolder+fileName);
+        File file = new File(pathToFile);
         List<Float> records = new ArrayList<>();
         try {
             BufferedReader linesInTxtFile = new BufferedReader(new FileReader(file.getAbsoluteFile()));
@@ -33,10 +52,10 @@ public class Main {
         return records;
     }
 
-    private void write(String path, List<Float> records, String filename) {
+    private static void write(String pathToFolder, List<Float> records) {
         //Check empty file or not
         if (!records.isEmpty()) {
-            File file = new File(path + filename + ".txt");
+            File file = new File(pathToFolder);
             try {
                 //If the file does not exist then create it
                 if (!file.exists()) {
@@ -47,12 +66,8 @@ public class Main {
                 try {
                     //Writing to a file using the ForEach
                     records.forEach(record -> {
-                        // first - User Name + |
-                        // next - date + |
-                        // and last - message + \n (new line)
-                        out.print("\n");
+                        out.print(record + "\n");
                     });
-
                 } finally {
                     //Close the file
                     out.close();
