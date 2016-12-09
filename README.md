@@ -1,29 +1,9 @@
 # This program sorts the number descending.
 
+For start:
+1. Open console 
+2. Write: 
+java -cp "path_to_jar" Main "path_to_input_file" "path_to_output_file" "number_of_temp_files"
 
-after starting the program, enter the path to the input file, for example:
-
-`"/Users/user/IdeaProjects/sort-values/example.in"`
-
-For example content in input file "example.in": 
-0.4
-0.3
-5.3
-3.1
-533.2
-54.2
-1.2
-
-
-and enter the path to output file:
-
-`"/Users/user/IdeaProjects/sort-values/example.out"`
-
-output file:
-533.2
-54.2
-5.3
-3.1
-1.2
-0.4
-0.3
+For example:
+java -cp /Users/user/IdeaProjects/sort-values/target/sort-values-1.0-SNAPSHOT.jar Main /Users/user/IdeaProjects/untitled2/input.in /Users/artem/IdeaProjects/sort-values/ 10000000

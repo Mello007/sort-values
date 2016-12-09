@@ -1,25 +1,26 @@
 package utility.file;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *
+ *  This class sorts the values of temporary files and writes them in the output file
  */
 public class MergeSortHelper {
 
-    private final String NAME_OF_OUT_FILE = "sorted_logs";
+    private final String NAME_OF_OUT_FILE = "data";
 
     private final String pathToOutPutFile;
 
     /**
-     *
-     * @param pathToOutPutFile
+     * @param pathToOutPutFile path to output file entered by user
      */
     public MergeSortHelper(String pathToOutPutFile){
         this.pathToOutPutFile = pathToOutPutFile;
     }
+
 
     private void createOutputFile(String pathToOutPutFile){
         File file = new File(pathToOutPutFile + NAME_OF_OUT_FILE);
@@ -32,12 +33,19 @@ public class MergeSortHelper {
         }
     }
 
-    private void writeInOutputFile(String number){
+    private void writeInOutputFile(List<String> numbers){
             try {
                 FileWriter writer = new FileWriter(pathToOutPutFile+NAME_OF_OUT_FILE, true);
                 BufferedWriter bufferWriter = new BufferedWriter(writer);
                 try {
-                    bufferWriter.write(number +"\n");
+                    numbers.forEach(number->{
+                        try {
+                            bufferWriter.write(number + System.lineSeparator());
+                        } catch (IOException e) {
+                            throw new RuntimeException("Error in writing!!!");
+                        }
+                    });
+//                    bufferWriter.write(number + System.lineSeparator());
                 } finally {
                     bufferWriter.close();
                 }
@@ -48,26 +56,31 @@ public class MergeSortHelper {
     }
 
     /**
-     *
-     * @param tempFiles
+     *  This method
+     * @param tempFiles - List with temp files.
      * @throws Exception
      */
     public void merge(List<File> tempFiles) throws Exception {
-        List<MergeStructure> mergeStructors = tempFiles.stream().map(MergeStructure::new).collect(Collectors.toList());
+        List<String> outputNumbers = new ArrayList<>();
+        List<MergeStructure> mergeStructures = tempFiles.stream().map(MergeStructure::new).collect(Collectors.toList());
         createOutputFile(pathToOutPutFile);
-        while (!mergeStructors.isEmpty()){
-            MergeStructure maxMergeStructor = mergeStructors.stream().max(MergeStructure::compareTo).get();
-            writeInOutputFile(maxMergeStructor.toString());
-            if (maxMergeStructor.next() == null) {
-                mergeStructors.remove(maxMergeStructor);
+
+        while (!mergeStructures.isEmpty()){
+             //List with mergeStructures which contain sorted numbers
+            MergeStructure maxMergeStructure = mergeStructures.stream().max(MergeStructure::compareTo).get();
+            outputNumbers.add(maxMergeStructure.toString());
+            if (maxMergeStructure.next() == null) {
+                mergeStructures.remove(maxMergeStructure);
             };
         }
+        writeInOutputFile(outputNumbers);
     }
 
     private static class MergeStructure implements Comparable {
         private Float currentNumber;
         private final BufferedReader bufferedReader;
         private final FileReader fileReader;
+
 
         public MergeStructure(File file)  {
             try {
@@ -79,6 +92,7 @@ public class MergeSortHelper {
             }
         }
 
+        //A method which reads the next line and return it
         private Float next() throws Exception {
             String currentString = bufferedReader.readLine();
             if (currentString == null) {
@@ -97,6 +111,7 @@ public class MergeSortHelper {
             return this.currentNumber;
         }
 
+        //A method for comparison currentNumbers
         @Override
         public int compareTo(Object o) {
             if (o != null && o instanceof MergeStructure){
