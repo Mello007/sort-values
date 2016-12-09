@@ -54,7 +54,6 @@ public class ValidationUtils {
         if (!isValidSize){
             throw new RuntimeException(String.format(SIZE_IS_NOT_VALID, size, ValidationUtils.MIN_VALUE, Integer.MAX_VALUE));
         }
-
         return true;
     }
 }
