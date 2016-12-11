@@ -16,7 +16,6 @@ public class FileSeparateHelper {
      * @param pathToInputFile - path to Input File
      * @param sizeOfFile - size Of file
      */
-
     public FileSeparateHelper(String pathToInputFile,  Integer sizeOfFile){
         this.pathToInputFile = pathToInputFile;
         this.sizeOfFile = sizeOfFile;
@@ -27,14 +26,13 @@ public class FileSeparateHelper {
      * @throws Exception
      */
     public List<File> processFile() throws Exception {
-        final File inputFile = new File(pathToInputFile);
 
+        final File inputFile = new File(pathToInputFile);
         FileReader fileReader = new FileReader(inputFile.getAbsoluteFile());
         BufferedReader linesInTxtFile = new BufferedReader(fileReader);
         List<Float> partOfFile;
         List<File> tempFiles = new ArrayList<>();
 
-        // Read and write temporary files
         do {
             partOfFile = this.readPartOfInputFile(linesInTxtFile);
             tempFiles.add(this.writeTempFile(partOfFile));
@@ -47,14 +45,14 @@ public class FileSeparateHelper {
     private List<Float> readPartOfInputFile(BufferedReader bufferedReader) throws IOException {
         List<Float> records = new ArrayList<>();
         String lineInFile = null;
-        boolean isNeedToWriteInFile = records.size() != sizeOfFile && (lineInFile = bufferedReader.readLine()) != null;
-        while (isNeedToWriteInFile) {
+        boolean isNeedToAddNumberInList = records.size() != sizeOfFile && (lineInFile = bufferedReader.readLine()) != null;
+        while (isNeedToAddNumberInList) {
             try {
                 records.add(Float.valueOf(lineInFile));
             } catch (NumberFormatException e){
                 throw new RuntimeException(String.format(STRING_IS_NOT_FLOAT, lineInFile));
             }
-            isNeedToWriteInFile = records.size() != sizeOfFile && (lineInFile = bufferedReader.readLine()) != null;
+            isNeedToAddNumberInList = records.size() != sizeOfFile && (lineInFile = bufferedReader.readLine()) != null;
         }
         //A method for sorting from top to bottom
         Collections.sort(records, Collections.reverseOrder());
