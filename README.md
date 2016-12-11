@@ -3,6 +3,7 @@
 **To sort a large file is divided into small files.**
 
 For start:
+
 1. Open console 
 
 2. Write: 
