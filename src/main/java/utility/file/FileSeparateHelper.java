@@ -10,17 +10,15 @@ public class FileSeparateHelper {
     private static final String STRING_IS_NOT_FLOAT = "Number is not float: %s";
 
     private final String pathToInputFile;
-    private final String pathToOutputFile;
     private final Integer sizeOfFile;
 
     /**
      * @param pathToInputFile - path to Input File
-     * @param pathToOutputFile - path to Output File
      * @param sizeOfFile - size Of file
      */
-    public FileSeparateHelper(String pathToInputFile, String pathToOutputFile, Integer sizeOfFile){
+
+    public FileSeparateHelper(String pathToInputFile,  Integer sizeOfFile){
         this.pathToInputFile = pathToInputFile;
-        this.pathToOutputFile = pathToOutputFile;
         this.sizeOfFile = sizeOfFile;
     }
 
@@ -29,53 +27,48 @@ public class FileSeparateHelper {
      * @throws Exception
      */
     public List<File> processFile() throws Exception {
-        //Counter for names of temp files
-        int recordNumber = 0;
-
         final File inputFile = new File(pathToInputFile);
 
         FileReader fileReader = new FileReader(inputFile.getAbsoluteFile());
         BufferedReader linesInTxtFile = new BufferedReader(fileReader);
-        List<Float> partOfFile = this.readPartOfInputFile(linesInTxtFile);
+        List<Float> partOfFile;
         List<File> tempFiles = new ArrayList<>();
 
-        while (!partOfFile.isEmpty()){
-            recordNumber++;
-            String pathToTempFile = pathToOutputFile + recordNumber;
-            tempFiles.add(this.writeTempFile(pathToTempFile, partOfFile));
+        // Read and write temporary files
+        do {
             partOfFile = this.readPartOfInputFile(linesInTxtFile);
-        }
+            tempFiles.add(this.writeTempFile(partOfFile));
+        } while (tempFiles.size() != sizeOfFile && linesInTxtFile.readLine() != null);
         fileReader.close();
         linesInTxtFile.close();
         return tempFiles;
     }
 
-    private List<Float> readPartOfInputFile(BufferedReader bufferedReader) throws IOException{
+    private List<Float> readPartOfInputFile(BufferedReader bufferedReader) throws IOException {
         List<Float> records = new ArrayList<>();
         String lineInFile = null;
-        Float number;
         boolean isNeedToWriteInFile = records.size() != sizeOfFile && (lineInFile = bufferedReader.readLine()) != null;
         while (isNeedToWriteInFile) {
             try {
-                number = Float.valueOf(lineInFile);
-                records.add(number);
+                records.add(Float.valueOf(lineInFile));
             } catch (NumberFormatException e){
                 throw new RuntimeException(String.format(STRING_IS_NOT_FLOAT, lineInFile));
             }
             isNeedToWriteInFile = records.size() != sizeOfFile && (lineInFile = bufferedReader.readLine()) != null;
         }
+        //A method for sorting from top to bottom
         Collections.sort(records, Collections.reverseOrder());
         return records;
     }
 
-    private File writeTempFile(String pathToTempFile, List<Float> records) {
-        File file = new File(pathToTempFile);
+    private File writeTempFile(List<Float> records) throws IOException {
+        File file = File.createTempFile("tempfile", ".tmp");
         try (PrintWriter out = new PrintWriter(file.getAbsoluteFile()))  {
-            file.createNewFile();
             records.forEach(out::println);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error in writing temp File!");
         }
+        records.clear();
         return file;
     }
 }

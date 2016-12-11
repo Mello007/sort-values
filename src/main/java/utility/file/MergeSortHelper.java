@@ -14,11 +14,14 @@ public class MergeSortHelper {
 
     private final String pathToOutPutFile;
 
+    private final Integer sizeForTempOutPutFiles;
+
     /**
      * @param pathToOutPutFile path to output file entered by user
      */
-    public MergeSortHelper(String pathToOutPutFile){
+    public MergeSortHelper(String pathToOutPutFile, Integer sizeForTempOutPutFiles){
         this.pathToOutPutFile = pathToOutPutFile;
+        this.sizeForTempOutPutFiles = sizeForTempOutPutFiles;
     }
 
 
@@ -36,23 +39,18 @@ public class MergeSortHelper {
     private void writeInOutputFile(List<String> numbers){
             try {
                 FileWriter writer = new FileWriter(pathToOutPutFile+NAME_OF_OUT_FILE, true);
-                BufferedWriter bufferWriter = new BufferedWriter(writer);
-                try {
-                    numbers.forEach(number->{
+                try (BufferedWriter bufferWriter = new BufferedWriter(writer)) {
+                    numbers.forEach(number -> {
                         try {
                             bufferWriter.write(number + System.lineSeparator());
                         } catch (IOException e) {
                             throw new RuntimeException("Error in writing!!!");
                         }
                     });
-//                    bufferWriter.write(number + System.lineSeparator());
-                } finally {
-                    bufferWriter.close();
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            // print message if records exist
     }
 
     /**
@@ -71,7 +69,11 @@ public class MergeSortHelper {
             outputNumbers.add(maxMergeStructure.toString());
             if (maxMergeStructure.next() == null) {
                 mergeStructures.remove(maxMergeStructure);
-            };
+            }
+            if (outputNumbers.size() == sizeForTempOutPutFiles) {
+                writeInOutputFile(outputNumbers);
+                outputNumbers.clear();
+            }
         }
         writeInOutputFile(outputNumbers);
     }
@@ -80,7 +82,6 @@ public class MergeSortHelper {
         private Float currentNumber;
         private final BufferedReader bufferedReader;
         private final FileReader fileReader;
-
 
         public MergeStructure(File file)  {
             try {
