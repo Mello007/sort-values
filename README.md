@@ -10,6 +10,12 @@ For start:
 
 java -cp "path_to_jar" Main "path_to_input_file" "path_to_output_file" "number_of_temp_files"
 
+path_to_jar - path to jar
+
+path_to_input_file - path to input file with numbers
+
+path_to_output_file - path to output file
+
 number_of_temp_files - it's a special program parameter, which specifies the number of rows in the temporary files. It is used to determine the amount of RAM.
 
 For example:
