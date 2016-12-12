@@ -30,14 +30,15 @@ public class FileSeparateHelper {
         final File inputFile = new File(pathToInputFile);
         FileReader fileReader = new FileReader(inputFile.getAbsoluteFile());
         BufferedReader linesInTxtFile = new BufferedReader(fileReader);
-        List<Float> partOfFile;
+        List<Float> partOfFile = this.readPartOfInputFile(linesInTxtFile);
         List<File> tempFiles = new ArrayList<>();
 
-        while (linesInTxtFile.readLine() != null){
-            partOfFile = this.readPartOfInputFile(linesInTxtFile);
+        while (!partOfFile.isEmpty()){
             tempFiles.add(this.writeTempFile(partOfFile));
+            partOfFile.clear();
+            partOfFile = this.readPartOfInputFile(linesInTxtFile);
         }
-
+        partOfFile.clear();
         fileReader.close();
         linesInTxtFile.close();
         return tempFiles;
@@ -67,7 +68,6 @@ public class FileSeparateHelper {
         } catch (IOException e) {
             throw new RuntimeException("Error in writing temp File!");
         }
-        records.clear();
         return file;
     }
 }
