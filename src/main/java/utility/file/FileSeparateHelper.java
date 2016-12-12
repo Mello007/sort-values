@@ -33,10 +33,11 @@ public class FileSeparateHelper {
         List<Float> partOfFile;
         List<File> tempFiles = new ArrayList<>();
 
-        do {
+        while (linesInTxtFile.readLine() != null){
             partOfFile = this.readPartOfInputFile(linesInTxtFile);
             tempFiles.add(this.writeTempFile(partOfFile));
-        } while (tempFiles.size() != sizeOfFile && linesInTxtFile.readLine() != null);
+        }
+
         fileReader.close();
         linesInTxtFile.close();
         return tempFiles;

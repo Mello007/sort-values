@@ -61,6 +61,7 @@ public class MergeSortHelper {
     public void merge(List<File> tempFiles) throws Exception {
         List<String> outputNumbers = new ArrayList<>();
         List<MergeStructure> mergeStructures = tempFiles.stream().map(MergeStructure::new).collect(Collectors.toList());
+        createOutputFile(pathToOutPutFile);
         while (!mergeStructures.isEmpty()){
             MergeStructure maxMergeStructure = mergeStructures.stream().max(MergeStructure::compareTo).get();
             outputNumbers.add(maxMergeStructure.toString());
@@ -72,7 +73,7 @@ public class MergeSortHelper {
                 outputNumbers.clear();
             }
         }
-        createOutputFile(pathToOutPutFile);
+
         writeInOutputFile(outputNumbers);
     }
 
