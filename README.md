@@ -6,9 +6,9 @@ For start:
 
 1. Open console 
 
-2. Write: 
+2. Write: java -cp "path_to_jar" Main "path_to_input_file" "path_to_output_file" "number_of_temp_files"
 
-java -cp "path_to_jar" Main "path_to_input_file" "path_to_output_file" "number_of_temp_files"
+Description of the parameters:
 
 path_to_jar - path to jar
 
